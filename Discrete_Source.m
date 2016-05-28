@@ -13,7 +13,8 @@
 % 这里取微元dx尺度为观测点距发射长导线最短距离的1/20为标准
 % dx = dmin /20;
 % 离散后形成的电偶源的个数N = L/dx;
-function [N, dx,x_center,dmin] = Discrete_Source(x,y,z,L)
+% r 返回个电偶极源中心距观测点的距离
+function [N, dx,x_center,dmin,r] = Discrete_Source(x,y,z,L)
     r1 = ((x+L/2)^2+y^2)^(0.5);
     r2 = ((x-L/2)^2+y^2)^(0.5);
     %% 计算观测观测点距长导线源的最短距离
@@ -25,15 +26,24 @@ function [N, dx,x_center,dmin] = Discrete_Source(x,y,z,L)
         dmin = abs(y);
     end
     zoomout = 20; 
+     if dmin >= zoomout*L
+         r =  (x^2+y^2).^(0.5);
+         dx = L;
+         N = 1;
+         x_center = [0];
+%          error('可以认为激励源为水平电偶极源，无需分割成小微元');
+%          return;
+     else
+        % if the distance from the observation point to the source < 20 times the long of the source
     dx = dmin ./ zoomout;
-    N =floor(ceil(L./dx)./2).*2+1 ;
-    dx = L./N; % 实际分成的电偶源尺度大小
+    N =floor(ceil(L./dx)./2).*2+1 ;% the moment cell numbers
+    dx = L/N; % real scale of the moment cell
     % 变为奇数，为使中间的电偶源中点落在源点处，也是为了对称考虑
-    
-    x_p = ones(1,(N-1)./2);% locate + x axis
-    x_p = dx.*(1:(N-1)./2);
-    x_n = -x_p;
-    x_center = [x_n, 0 , x_p];
+%     x_p = ones(1,(N-1)./2);% locate + x axis
+    x_p = dx.*(1:(N-1)/2); % the center position of the moment cell located + x axis direction   
+    x_n = -x_p;% the center position of the moment cell located - x axis direction
+    x_center = [x_n, 0 , x_p];% the center position of the moment cell
+    r = ((x-x_center).^2+y.^2).^0.5;
     %% 绘制结果图看分解效果
     figure;
     x_axis = (-L/2:dx:L/2);
@@ -52,5 +62,6 @@ function [N, dx,x_center,dmin] = Discrete_Source(x,y,z,L)
     xlabel('x-source scale/m');
     ylabel('y-offset/m');
     zlabel(' z-hight of the receiver/m');
-
+    end
+    
 end
