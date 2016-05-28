@@ -2,7 +2,7 @@
 % 中间项是对应阶跃响应的中间项
 
 function [ e11_1_impulse,e11_01_step,e12_1_impulse,e12_01_step,h11_1_impulse,h11_01_step,h12_1_impulse,h12_01_step] = calculate_temp(r1,r2,z,t,G_S,m2,J_1,delta_1)
-
+u0 = 4*pi*1e-7;
 % 电场积分项
 e11_1_impulse = zeros(1,length(t));
 e11_01_step = zeros(1,length(t));
@@ -38,23 +38,23 @@ for ii=1:length(t)
       %% ---------------------------------------------------针对R1接地项的中间值
       % 电场接地项的中间值
       f_e11 = exp(lambda1_Array.*(z)).*(2.*z1bar_1-(1+r_TE1).*(z0_bar1)./lambda1_Array); 
-      g_e11 = Fast_Hankel(r,f_e11,J_1);%列向量
+      g_e11 = Fast_Hankel(r1,f_e11,J_1);%列向量
       e11_1_impulse(ii) = GS_Trans2(t(ii),g_e11,G_S); %正脉冲响应时域
       e11_01_step(ii) = GS_Trans(t(ii),g_e11,freq,G_S);%正阶跃响应时域
       % 磁场接地项的中间值
       f_h11 = (1+r_TE1).*exp(lambda1_Array.*(z));% r_TM1 = 1;
-      g_h11 = Fast_Hankel(r,f_h11,J_1);%正阶跃响应频域，f_h11的同一行的对应不同lambda（汉克尔变换滤波系数不同偏移量）的值
+      g_h11 = Fast_Hankel(r1,f_h11,J_1);%正阶跃响应频域，f_h11的同一行的对应不同lambda（汉克尔变换滤波系数不同偏移量）的值
       h11_1_impulse(ii) = GS_Trans2(t(ii),g_h11,G_S); %正脉冲响应时域
       h11_01_step(ii) = GS_Trans(t(ii),g_h11,freq,G_S);%正阶跃响应时域
       %% ---------------------------------------------------针对R2接地项的中间值
       % 电场接地项的中间值
       f_e12 = exp(lambda2_Array.*(z)).*(2.*z1bar_2-(1+r_TE2).*(z0_bar2)./lambda2_Array); 
-      g_e12 = Fast_Hankel(r,f_e12,J_1);%列向量
+      g_e12 = Fast_Hankel(r2,f_e12,J_1);%列向量
       e12_1_impulse(ii) = GS_Trans2(t(ii),g_e12,G_S); %正脉冲响应时域
       e12_01_step(ii) = GS_Trans(t(ii),g_e12,freq,G_S);%正阶跃响应时域
       % 磁场接地项的中间值
-      f_h12 = (1+r_TE2).*exp(lambda2_Array.*(z));% r_TM1 = 1;
-      g_h12 = Fast_Hankel(r,f_h12,J_1);%正阶跃响应频域，f_h11的同一行的对应不同lambda（汉克尔变换滤波系数不同偏移量）的值
+      f_h12 = (1+r_TE2).*exp(lambda2_Array.*(z));% r_TM2 = 1;
+      g_h12 = Fast_Hankel(r2,f_h12,J_1);%正阶跃响应频域，f_h11的同一行的对应不同lambda（汉克尔变换滤波系数不同偏移量）的值
       h12_1_impulse(ii) = GS_Trans2(t(ii),g_h12,G_S); %正脉冲响应时域
       h12_01_step(ii) = GS_Trans(t(ii),g_h12,freq,G_S);%正阶跃响应时域
 end
