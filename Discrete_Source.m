@@ -14,7 +14,8 @@
 % dx = dmin /20;
 % 离散后形成的电偶源的个数N = L/dx;
 % r 返回个电偶极源中心距观测点的距离
-function [N, dx,x_center,dmin,r] = Discrete_Source(x,y,z,L)
+% 细化因子：1/2~2
+function [N, dx,x_center,dmin,r] = Discrete_Source(x,y,z,L,fine)
     r1 = ((x+L/2)^2+y^2)^(0.5);
     r2 = ((x-L/2)^2+y^2)^(0.5);
     %% 计算观测观测点距长导线源的最短距离
@@ -25,17 +26,24 @@ function [N, dx,x_center,dmin,r] = Discrete_Source(x,y,z,L)
     else
         dmin = abs(y);
     end
-    zoomout = 20; 
-     if dmin >= zoomout*L
+    if fine>5 || fine <0.5
+        error('细化因子输入错误');
+        return;
+    end
+    zoomout = ceil(50*fine); 
+if dmin >= zoomout*L
          r =  (x^2+y^2).^(0.5);
          dx = L;
          N = 1;
-         x_center = [0];
-%          error('可以认为激励源为水平电偶极源，无需分割成小微元');
-%          return;
+         x_center = 0;
+         display('可以认为激励源为水平电偶极源，无需分割成小微元');
+         return;
      else
         % if the distance from the observation point to the source < 20 times the long of the source
     dx = dmin ./ zoomout;
+end
+%     if dx > 1
+%         dx = 1;
     N =floor(ceil(L./dx)./2).*2+1 ;% the moment cell numbers
     dx = L/N; % real scale of the moment cell
     % 变为奇数，为使中间的电偶源中点落在源点处，也是为了对称考虑
@@ -62,6 +70,6 @@ function [N, dx,x_center,dmin,r] = Discrete_Source(x,y,z,L)
     xlabel('x-source scale/m');
     ylabel('y-offset/m');
     zlabel(' z-hight of the receiver/m');
-    end
+%     end
     
 end

@@ -16,11 +16,15 @@ kk = -1i * 2 * pi * frequency_Array * mu_0;%使不同行频率不同，同一行频率相同
 % u1_star =  (lambda_2 - kk .* sigma(N)).^0.5;% 获得最底层的u_n
 %%   新添加项-------------------------------------20160511
 z1_star =  (lambda_2 - kk .* sigma(N)).^0.5./sigma(N);
+if N >1
+    
 for k= N-1:-1:1 %% n层只需要递推n-1次
      u_n = (lambda_2 - kk.*sigma(k)).^0.5;% 第n层的u_n；
     z_n = u_n./sigma(k);% 第n层的z_n,新添加项------------20160511
-%     u1_star = u_n .*( u1_star + u_n .* exp(-2*u_n * d(k)))./(u_n + u1_star .* exp(-2*u_n * d(k)));
-    z1_star = z_n .*( z1_star + z_n .* exp(-2*u_n * d(k)))./(z_n + z1_star .* exp(-2*u_n * d(k)));
+%     z1_star = z_n .*( z1_star + z_n .* exp(-2*u_n * d(k)))./(z_n + z1_star .* exp(-2*u_n * d(k)));
+    temp = tanh(u_n * d(k));
+    z1_star = z_n .*( z1_star + z_n .* temp)./(z_n + z1_star .* temp);
+end
 end
 rtm_z1bar = z1_star;
 
