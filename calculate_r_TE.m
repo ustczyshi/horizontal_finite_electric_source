@@ -14,9 +14,14 @@ lambda_2 = lambda_Array.^2;
 % u1_star =  (lambda_2 - kk * 1./rho(N)).^0.5;% 
 kk = -1i * 2 * pi * frequency_Array * mu_0;
 u1_star =  (lambda_2 - kk .* sigma(N)).^0.5;% 
+if N>1
+    
 for k= N-1:-1:1 %% n层只需要递推n-1次
     u_n = (lambda_2 - kk.*sigma(k)).^0.5;% 第n层的u_n；
-    u1_star = u_n .*( u1_star + u_n .* exp(-2*u_n * d(k)))./(u_n + u1_star .* exp(-2*u_n * d(k)));
+%     u1_star = u_n .*( u1_star + u_n .* exp(-2*u_n * d(k)))./(u_n + u1_star .* exp(-2*u_n * d(k)));
+    temp = tanh(u_n * d(k));
+    u1_star = u_n .*( u1_star + u_n .* temp)./(u_n + u1_star .* temp);
+end
 end
 rte = (lambda_Array-u1_star)./(lambda_Array+u1_star);
 

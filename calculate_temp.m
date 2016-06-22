@@ -1,16 +1,23 @@
 %% 电场计算和磁场计算的中间项,
 % 中间项是对应阶跃响应的中间项
-
+% 对应文档中的中间量C_e1~e11;
+% 对应文档中的中间量C_e2~e12;
+% 对应文档中的中间量C_h1~h11;
+% 对应文档中的中间量C_h2~h12;
 function [ e11_1_impulse,e11_01_step,e12_1_impulse,e12_01_step,h11_1_impulse,h11_01_step,h12_1_impulse,h12_01_step] = calculate_temp(r1,r2,z,t,G_S,m2,J_1,delta_1)
 u0 = 4*pi*1e-7;
 % 电场积分项
+% 对应文档中的中间量C_e1~e11;
 e11_1_impulse = zeros(1,length(t));
 e11_01_step = zeros(1,length(t));
+% 对应文档中的中间量C_e2~e12;
 e12_1_impulse = zeros(1,length(t));
 e12_01_step = zeros(1,length(t));
 % 磁场积分项
+% 对应文档中的中间量C_h1~h11;
 h11_1_impulse = zeros(1,length(t));
 h11_01_step = zeros(1,length(t));
+% 对应文档中的中间量C_h2~h12;
 h12_1_impulse = zeros(1,length(t));
 h12_01_step = zeros(1,length(t));
 

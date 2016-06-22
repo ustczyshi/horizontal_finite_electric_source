@@ -27,4 +27,8 @@ step_ey01 = ey_coff.*3.*xr.*yr.*ones(1,length(Tob));
 impluse_hx = hx_coff.*((4+temp.^2).*I1-temp.^2.*I0);
 impulse_hy = hy_coff.*(3.*I1+temp.^2.*(I1-I0)-xr.^2./r.^2.*((temp.^2+4).*I1-temp.^2.*I0));
 impulse_hz = hz_coff .*(3.*erf(temp)-2./pi.^0.5.*temp.*(3+2.*temp.^2).*exp(-temp.^2));
+% save data
+save(['Horizontal_Electrical_Dipole_Response_rou' num2str(rou) '_xr' num2str(xr) '_yr' num2str(yr) '_zr' num2str(zr) '.mat'],...
+    'step_ex01','step_ey01','impluse_hx','impulse_hy','impulse_hz');
+
 end
